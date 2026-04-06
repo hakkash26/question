@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_USER = 'hakkash26'
+        APP_NAME        = 'login-service'
+        IMAGE_NAME      = "${DOCKER_HUB_USER}/${APP_NAME}"
+    }
+
+    stages {
+        stage('1. Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hakkash26/question.git'
+            }
+        }
+
+        stage('2. Build & Test') {
+            steps {
+                // Task 2: JUnit validation
+                bat 'mvn clean verify'
+            }
+        }
+
+        stage('3. Docker Build') {
+            steps {
+                // Task 4: Create the container
+                bat "docker build -t ${IMAGE_NAME}:latest ."
+            }
+        }
+    }
+}
